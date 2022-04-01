@@ -1,25 +1,55 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from 'react';
+import master from './masterDataParser'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends Component {
+  state = {
+    masterArr: [],
+    masterObj: {},
+    final: {}
+   }
+
+  componentWillMount(){
+    this.setState({masterArr: master})
+  }
+
+  componentDidMount(){
+    var total = 0;
+    for(let i = 0; i < this.state.masterArr.length; i++){
+      total += this.state.masterArr[i].timeLag
+    }
+    var avg = total / this.state.masterArr.length
+    var intValue = parseInt(Math.floor(avg))
+    console.log(this.state.masterArr)
+    console.log("int: " + intValue)
+    this.myFunction(intValue);
+  }
+
+
+  myFunction(avgLag){
+    for(let x = 0; x < this.state.masterArr.length; x++){
+      let variable = this.state.masterArr[x].variant
+      if(!(variable in this.state.masterObj)){
+        this.state.masterObj[variable] = 0
+      }else if(variable in this.state.masterObj && this.state.masterArr[x].timeLag > avgLag){
+        this.state.masterObj[variable] += 1
+      }
+    }
+    console.log("masterObj: " + JSON.stringify(this.state.masterObj))
+  }
+
+  yourFunction(){
+    return JSON.stringify(this.state.masterObj)
+  }
+
+
+  render() { 
+    return (
+      <div>
+        
+      </div>
+    );
+  }
 }
-
+ 
 export default App;
